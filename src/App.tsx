@@ -24,6 +24,7 @@ import { SettingsPage } from './pages/SettingsPage';
 import { AccountPage } from './pages/AccountPage';
 import { AuthPage } from './pages/AuthPage';
 import { NotificationsPage } from './pages/NotificationsPage';
+import { NotFoundPage } from './pages/NotFoundPage';
 
 export default function App() {
   return (
@@ -58,8 +59,8 @@ export default function App() {
                 <Route path="/upgrade" element={<Navigate to="/" replace />} />
               </Route>
 
-              {/* Catch-all redirect to Dashboard (routed through ProtectedRoute) */}
-              <Route path="*" element={<Navigate to="/" replace />} />
+              {/* Catch-all 404 page */}
+              <Route path="*" element={<NotFoundPage />} />
             </Route>
           </Routes>
         </AppProvider>
