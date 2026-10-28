@@ -231,6 +231,92 @@ ${religionInstruction}
   }
 }
 
+// In-memory push subscriptions store
+const pushSubscriptions = new Map<string, PushSubscriptionData>();
+
+interface PushSubscriptionData {
+  endpoint: string;
+  keys: { p256dh: string; auth: string };
+  userId?: string;
+  userAgent?: string;
+  subscribedAt: string;
+}
+
+export async function handleSubscribePush(req: Request, res: Response) {
+  try {
+    const { endpoint, keys, userId, userAgent } = req.body;
+    if (!endpoint || !keys) {
+      return res.status(400).json({ error: 'endpoint and keys are required' });
+    }
+
+    pushSubscriptions.set(endpoint, {
+      endpoint,
+      keys,
+      userId,
+      userAgent,
+      subscribedAt: new Date().toISOString(),
+    });
+
+    return res.json({ success: true, subscribed: true, subscribedAt: new Date().toISOString() });
+  } catch (err: any) {
+    return res.status(500).json({ error: err.message || 'Push subscription failed' });
+  }
+}
+
+export async function handleUnsubscribePush(req: Request, res: Response) {
+  try {
+    const { endpoint } = req.body;
+    if (!endpoint) {
+      return res.status(400).json({ error: 'endpoint is required' });
+    }
+
+    pushSubscriptions.delete(endpoint);
+    return res.json({ success: true, unsubscribed: true });
+  } catch (err: any) {
+    return res.status(500).json({ error: err.message || 'Push unsubscription failed' });
+  }
+}
+
+export async function handleSendPush(req: Request, res: Response) {
+  try {
+    const { title, body, icon, tag, url, data } = req.body;
+    if (!title || !body) {
+      return res.status(400).json({ error: 'title and body are required' });
+    }
+
+    const notificationPayload = {
+      title,
+      body,
+      icon: icon || '/src/assets/images/avatar_partner_1792816163693.jpg',
+      tag: tag || 'isabilove-notification',
+      data: data || {},
+      ...(url ? { url } : {}),
+    };
+
+    const results = await Promise.allSettled(
+      Array.from(pushSubscriptions.values()).map(async (sub) => {
+        // In a production environment, you would use the Web Push library
+        // to send encrypted push payloads to each subscription endpoint.
+        // For now, we simulate dispatch via the existing webhook mechanism
+        // or store the notification for later delivery.
+        console.log('Would send push to:', sub.endpoint, notificationPayload);
+        return { endpoint: sub.endpoint, status: 'simulated' };
+      })
+    );
+
+    return res.json({
+      success: true,
+      sent: results.length,
+      results,
+      dispatchedAt: new Date().toISOString(),
+      simulated: true,
+      note: 'Push notifications require VAPID keys for production delivery. Currently simulated.',
+    });
+  } catch (err: any) {
+    return res.status(500).json({ error: err.message || 'Push send failed' });
+  }
+}
+
 export async function handleDispatchWebhook(req: Request, res: Response) {
   try {
     const { url, payload } = req.body;

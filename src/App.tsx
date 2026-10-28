@@ -10,6 +10,7 @@ import { AppProvider } from './context/AppContext';
 import { Layout } from './components/Layout';
 
 import { ProtectedRoute } from './components/ProtectedRoute';
+import { PWAInstallPrompt } from './components/PWAInstallPrompt';
 
 // Standalone Pages
 import { DashboardPage } from './pages/DashboardPage';
@@ -29,6 +30,7 @@ export default function App() {
     <BrowserRouter>
       <AuthProvider>
         <AppProvider>
+          <PWAInstallPrompt />
           <Routes>
             <Route element={<Layout />}>
               {/* Public Auth Routes */}

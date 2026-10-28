@@ -1,0 +1,62 @@
+{
+  "name": "IsabiLove",
+  "short_name": "IsabiLove",
+  "description": "A quiet relationship haven to remember, honor, and cherish those entrusted to your heart with words of grace and timely devotion.",
+  "start_url": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#f3ece1",
+  "theme_color": "#8c6239",
+  "id": "/",
+  "lang": "en",
+  "dir": "ltr",
+  "scope": "/",
+  "categories": ["lifestyle", "social", "productivity"],
+  "screenshots": [
+    {
+      "src": "/src/assets/images/hero_relationship_1792816164710.jpg",
+      "sizes": "1200x630",
+      "type": "image/jpeg",
+      "label": "IsabiLove - Remember and cherish loved ones"
+    }
+  ],
+  "icons": [
+    {
+      "src": "/src/assets/images/avatar_partner_1792816163693.jpg",
+      "sizes": "192x192",
+      "type": "image/jpeg",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/src/assets/images/avatar_family_1792816164677.jpg",
+      "sizes": "512x512",
+      "type": "image/jpeg",
+      "purpose": "any maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Dashboard",
+      "short_name": "Dashboard",
+      "description": "View your loved ones and scheduled remembrances",
+      "url": "/",
+      "icons": [{ "src": "/src/assets/images/avatar_partner_1792816163693.jpg", "sizes": "192x192" }]
+    },
+    {
+      "name": "Contacts",
+      "short_name": "Contacts",
+      "description": "Manage your loved ones contacts",
+      "url": "/contacts",
+      "icons": [{ "src": "/src/assets/images/avatar_family_1792816164677.jpg", "sizes": "192x192" }]
+    },
+    {
+      "name": "Reminders",
+      "short_name": "Reminders",
+      "description": "View upcoming reminders",
+      "url": "/reminders",
+      "icons": [{ "src": "/src/assets/images/avatar_friend_1792816163998.jpg", "sizes": "192x192" }]
+    }
+  ],
+  "related_applications": [],
+  "prefer_related_applications": false
+}

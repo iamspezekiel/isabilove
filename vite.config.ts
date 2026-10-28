@@ -3,7 +3,13 @@ import react from '@vitejs/plugin-react';
 import express from 'express';
 import path from 'path';
 import { defineConfig } from 'vite';
-import { handleGenerateMessage, handleDispatchWebhook } from './server/api.ts';
+import {
+  handleGenerateMessage,
+  handleDispatchWebhook,
+  handleSubscribePush,
+  handleUnsubscribePush,
+  handleSendPush,
+} from './server/api.ts';
 
 export default defineConfig(() => {
   return {
@@ -17,6 +23,9 @@ export default defineConfig(() => {
           apiApp.use(express.json());
           apiApp.post('/api/gemini/generate-message', handleGenerateMessage);
           apiApp.post('/api/notifications/dispatch-webhook', handleDispatchWebhook);
+          apiApp.post('/api/notifications/subscribe-push', handleSubscribePush);
+          apiApp.post('/api/notifications/unsubscribe-push', handleUnsubscribePush);
+          apiApp.post('/api/notifications/send-push', handleSendPush);
           server.middlewares.use(apiApp);
         },
       },

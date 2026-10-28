@@ -39,3 +39,17 @@ createRoot(document.getElementById('root')!).render(
     <App />
   </ErrorBoundary>
 );
+
+// Register service worker for PWA (offline support + push notifications)
+if (typeof window !== 'undefined' && 'serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker
+      .register('/sw.js')
+      .then((registration) => {
+        console.log('ServiceWorker registered:', registration.scope);
+      })
+      .catch((err) => {
+        console.warn('ServiceWorker registration failed:', err);
+      });
+  });
+}
