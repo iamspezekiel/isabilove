@@ -41,7 +41,7 @@ export default function App() {
               <Route path="/reset-password" element={<Navigate to="/forgot-password" replace />} />
               <Route path="/demo" element={<AuthPage initialMode="login" />} />
 
-              {/* Protected App Routes - Mandatory Authentication */}
+              {/* Protected App Routes - Mandatory Authentication (with Layout) */}
               <Route element={<ProtectedRoute />}>
                 <Route path="/" element={<DashboardPage />} />
                 <Route path="/contacts" element={<ContactsPage />} />
@@ -51,12 +51,16 @@ export default function App() {
                 <Route path="/studio" element={<StudioPage />} />
                 <Route path="/history" element={<HistoryPage />} />
                 <Route path="/notifications" element={<NotificationsPage />} />
-                <Route path="/account" element={<AccountPage />} />
-                <Route path="/profile" element={<Navigate to="/account" replace />} />
-                <Route path="/settings" element={<SettingsPage />} />
                 <Route path="/subscription" element={<Navigate to="/" replace />} />
                 <Route path="/pricing" element={<Navigate to="/" replace />} />
                 <Route path="/upgrade" element={<Navigate to="/" replace />} />
+              </Route>
+
+              {/* Standalone Protected Pages - no Layout wrapper (account & settings) */}
+              <Route element={<ProtectedRoute />}>
+                <Route path="/profile" element={<Navigate to="/account" replace />} />
+                <Route path="/account" element={<AccountPage />} />
+                <Route path="/settings" element={<SettingsPage />} />
               </Route>
 
               {/* Catch-all 404 page */}
