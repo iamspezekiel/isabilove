@@ -1,0 +1,76 @@
+{
+  "entities": {
+    "User": {
+      "title": "User",
+      "description": "User profile document storing display name and preferences",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string", "description": "Firebase Auth user ID" },
+        "email": { "type": "string", "description": "Email address" },
+        "displayName": { "type": "string", "description": "Display name" },
+        "photoURL": { "type": "string", "description": "Avatar URL" },
+        "createdAt": { "type": "string", "description": "ISO timestamp" }
+      },
+      "required": ["uid", "email"]
+    },
+    "Contact": {
+      "title": "Contact",
+      "description": "Loved one contact profile",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string", "description": "Owner user ID" },
+        "name": { "type": "string", "description": "Contact full name" },
+        "relationship": { "type": "string", "description": "Relationship type" },
+        "loveLanguage": { "type": "string", "description": "Love language" },
+        "preferredTone": { "type": "string", "description": "Preferred tone" },
+        "createdAt": { "type": "string", "description": "ISO timestamp" }
+      },
+      "required": ["userId", "name", "relationship"]
+    },
+    "Reminder": {
+      "title": "Reminder",
+      "description": "Scheduled reminder for birthdays, anniversaries, or check-ins",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string", "description": "Owner user ID" },
+        "contactId": { "type": "string", "description": "Target contact ID" },
+        "occasionType": { "type": "string", "description": "Occasion type" },
+        "title": { "type": "string", "description": "Title of reminder" },
+        "eventDate": { "type": "string", "description": "Date of event" },
+        "status": { "type": "string", "description": "Active or paused status" }
+      },
+      "required": ["userId", "contactId", "title", "eventDate"]
+    },
+    "Draft": {
+      "title": "Draft",
+      "description": "AI-crafted message draft in approval queue or sent history",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string", "description": "Owner user ID" },
+        "contactId": { "type": "string", "description": "Target contact ID" },
+        "occasion": { "type": "string", "description": "Occasion name" },
+        "status": { "type": "string", "description": "Draft status" },
+        "customizedText": { "type": "string", "description": "Message content" }
+      },
+      "required": ["userId", "contactId", "customizedText"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "User",
+      "description": "Private user profile collection"
+    },
+    "/users/{userId}/contacts/{contactId}": {
+      "schema": "Contact",
+      "description": "User's private loved ones contacts"
+    },
+    "/users/{userId}/reminders/{reminderId}": {
+      "schema": "Reminder",
+      "description": "User's private reminders schedule"
+    },
+    "/users/{userId}/drafts/{draftId}": {
+      "schema": "Draft",
+      "description": "User's private drafts and sent messages"
+    }
+  }
+}

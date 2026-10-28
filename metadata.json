@@ -1,0 +1,6 @@
+{
+  "name": "IsabiLove",
+  "description": "A quiet relationship space to remember, honor, and cherish those entrusted to your heart with words of grace and timely devotion.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
