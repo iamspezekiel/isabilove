@@ -245,12 +245,11 @@ export function getStoredContacts(): Contact[] {
   try {
     const raw = localStorage.getItem(STORAGE_KEYS.CONTACTS);
     if (!raw) {
-      saveStoredContacts(DEFAULT_CONTACTS);
-      return DEFAULT_CONTACTS;
+      return [];
     }
     return JSON.parse(raw);
   } catch {
-    return DEFAULT_CONTACTS;
+    return [];
   }
 }
 
@@ -262,12 +261,11 @@ export function getStoredReminders(): Reminder[] {
   try {
     const raw = localStorage.getItem(STORAGE_KEYS.REMINDERS);
     if (!raw) {
-      saveStoredReminders(DEFAULT_REMINDERS);
-      return DEFAULT_REMINDERS;
+      return [];
     }
     return JSON.parse(raw);
   } catch {
-    return DEFAULT_REMINDERS;
+    return [];
   }
 }
 
@@ -279,12 +277,11 @@ export function getStoredDrafts(): MessageDraft[] {
   try {
     const raw = localStorage.getItem(STORAGE_KEYS.DRAFTS);
     if (!raw) {
-      saveStoredDrafts(DEFAULT_DRAFTS);
-      return DEFAULT_DRAFTS;
+      return [];
     }
     return JSON.parse(raw);
   } catch {
-    return DEFAULT_DRAFTS;
+    return [];
   }
 }
 
@@ -296,8 +293,14 @@ export function getStoredSubscription(): UserSubscription {
   try {
     const raw = localStorage.getItem(STORAGE_KEYS.SUBSCRIPTION);
     if (!raw) {
-      saveStoredSubscription(DEFAULT_SUBSCRIPTION);
-      return DEFAULT_SUBSCRIPTION;
+      const fresh: UserSubscription = {
+        ...DEFAULT_SUBSCRIPTION,
+        contactsLimit: 3,
+        aiDraftsLimit: 10,
+        aiDraftsUsed: 0,
+      };
+      saveStoredSubscription(fresh);
+      return fresh;
     }
     const parsed = JSON.parse(raw);
     return {
@@ -307,7 +310,12 @@ export function getStoredSubscription(): UserSubscription {
       aiDraftsLimit: 999999,
     };
   } catch {
-    return DEFAULT_SUBSCRIPTION;
+    return {
+      ...DEFAULT_SUBSCRIPTION,
+      contactsLimit: 3,
+      aiDraftsLimit: 10,
+      aiDraftsUsed: 0,
+    };
   }
 }
 

@@ -158,6 +158,13 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     setError(null);
     try {
       const fbUser = await registerWithEmail(email, pass, name);
+
+      // Clear any existing localStorage data so new users start fresh without demo data
+      localStorage.removeItem('isabi_contacts_v1');
+      localStorage.removeItem('isabi_reminders_v1');
+      localStorage.removeItem('isabi_drafts_v1');
+      localStorage.removeItem('isabi_subscription_v1');
+
       const appUser: AppUser = {
         uid: fbUser.uid,
         email: fbUser.email,
