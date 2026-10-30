@@ -241,6 +241,37 @@ const DEFAULT_SUBSCRIPTION: UserSubscription = {
   paymentMethodLast4: '',
 };
 
+export function getDefaultSubscriptionForNewUser(userName?: string, userEmail?: string): UserSubscription {
+  return {
+    tier: 'free',
+    contactsLimit: 3,
+    aiDraftsLimit: 10,
+    aiDraftsUsed: 0,
+    billingCycle: 'monthly',
+    timezone: typeof window !== 'undefined'
+      ? Intl.DateTimeFormat().resolvedOptions().timeZone
+      : 'America/New_York',
+    userName: userName || '',
+    userEmail: userEmail || '',
+    webhookUrl: '',
+    autoSendAuthorized: false,
+    morningWindow: '08:30',
+    eveningWindow: '20:00',
+    defaultTone: 'grateful',
+    defaultScriptureTranslation: 'NWT',
+    defaultDeliveryChannel: 'queue',
+    religion: 'christianity',
+    gender: 'prefer_not_to_say',
+    sabbathMode: true,
+    sabbathDay: 'sunday',
+    quietHoursEnabled: true,
+    weeklyDigestEnabled: true,
+    advanceNoticeDays: [7, 3, 0],
+    nextBillingDate: '',
+    paymentMethodLast4: '',
+  };
+}
+
 export function getStoredContacts(): Contact[] {
   if (typeof window === 'undefined') return [];
   try {

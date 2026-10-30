@@ -106,11 +106,22 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
   const clearError = () => setError(null);
 
+  // Clear all app data from localStorage so new users start completely fresh
+  const clearAppLocalStorage = () => {
+    localStorage.removeItem('isabi_contacts_v1');
+    localStorage.removeItem('isabi_reminders_v1');
+    localStorage.removeItem('isabi_drafts_v1');
+    localStorage.removeItem('isabi_subscription_v1');
+    localStorage.removeItem(GUEST_STORAGE_KEY);
+  };
+
   const loginGoogle = async () => {
     setIsLoading(true);
     setError(null);
     try {
       const fbUser = await loginWithGoogle();
+      // Clear localStorage so AppContext loads fresh from Firebase
+      clearAppLocalStorage();
       setUser({
         uid: fbUser.uid,
         email: fbUser.email,
@@ -132,6 +143,8 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     setError(null);
     try {
       const fbUser = await loginWithEmail(email, pass);
+      // Clear localStorage so AppContext loads fresh from Firebase
+      clearAppLocalStorage();
       setUser({
         uid: fbUser.uid,
         email: fbUser.email,
@@ -160,11 +173,9 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     try {
       const fbUser = await registerWithEmail(email, pass, name);
 
-      // Clear any existing localStorage data so new users start fresh without demo data
-      localStorage.removeItem('isabi_contacts_v1');
-      localStorage.removeItem('isabi_reminders_v1');
-      localStorage.removeItem('isabi_drafts_v1');
-      localStorage.removeItem('isabi_subscription_v1');
+      // Clear all localStorage data so new users start completely fresh
+      // without any demo or mock data
+      clearAppLocalStorage();
 
       const appUser: AppUser = {
         uid: fbUser.uid,

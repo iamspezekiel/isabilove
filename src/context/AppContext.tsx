@@ -8,6 +8,7 @@ import {
   UserSubscription,
   DeliveryChannel,
 } from '../types';
+import { useAuth } from '../context/AuthContext';
 import {
   getStoredContacts,
   saveStoredContacts,
@@ -18,7 +19,13 @@ import {
   getStoredSubscription,
   saveStoredSubscription,
   resetToDemoData,
+  getDefaultSubscriptionForNewUser,
 } from '../services/storage';
+import {
+  loadUserData,
+  saveUserData,
+  clearUserData,
+} from '../services/firestore';
 import { evaluateScheduler } from '../services/scheduler';
 
 interface AppContextType {
@@ -47,11 +54,13 @@ interface AppContextType {
 const AppContext = createContext<AppContextType | undefined>(undefined);
 
 export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
+  const { user } = useAuth();
   const [contacts, setContacts] = useState<Contact[]>(getStoredContacts);
   const [reminders, setReminders] = useState<Reminder[]>(getStoredReminders);
   const [drafts, setDrafts] = useState<MessageDraft[]>(getStoredDrafts);
   const [subscription, setSubscription] = useState<UserSubscription>(getStoredSubscription);
   const [toast, setToast] = useState<{ message: string; type: 'success' | 'info' | 'warning' } | null>(null);
+  const [isDataLoaded, setIsDataLoaded] = useState(false);
 
   const showToast = (message: string, type: 'success' | 'info' | 'warning' = 'success') => {
     setToast({ message, type });
@@ -81,6 +90,95 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
       }
     }
   }, [contacts, reminders]);
+
+  // ---- Firebase Sync ----
+  // When the user changes (sign in, sign up, logout, demo), load/sync data
+  useEffect(() => {
+    const handleUserChange = async () => {
+      if (!user) {
+        // No user — reset to empty state
+        setContacts([]);
+        setReminders([]);
+        setDrafts([]);
+        setSubscription(getDefaultSubscriptionForNewUser());
+        setIsDataLoaded(true);
+        return;
+      }
+
+      if (user.isGuest) {
+        // Guest / demo user — load from localStorage (may include demo data)
+        setContacts(getStoredContacts());
+        setReminders(getStoredReminders());
+        setDrafts(getStoredDrafts());
+        setSubscription(getStoredSubscription());
+        setIsDataLoaded(true);
+        return;
+      }
+
+      // Real authenticated user — load from Firebase
+      try {
+        const data = await loadUserData(user.uid);
+        if (data) {
+          // Returning user — restore their data
+          setContacts(data.contacts || []);
+          setReminders(data.reminders || []);
+          setDrafts(data.drafts || []);
+          setSubscription({
+            ...getDefaultSubscriptionForNewUser(user.displayName || undefined, user.email || undefined),
+            ...data.subscription,
+          });
+          // Also save to localStorage for offline fallback
+          saveStoredContacts(data.contacts || []);
+          saveStoredReminders(data.reminders || []);
+          saveStoredDrafts(data.drafts || []);
+          saveStoredSubscription({
+            ...getDefaultSubscriptionForNewUser(user.displayName || undefined, user.email || undefined),
+            ...data.subscription,
+          });
+        } else {
+          // New user — start completely fresh (no demo data)
+          setContacts([]);
+          setReminders([]);
+          setDrafts([]);
+          setSubscription(getDefaultSubscriptionForNewUser(user.displayName || undefined, user.email || undefined));
+          saveStoredContacts([]);
+          saveStoredReminders([]);
+          saveStoredDrafts([]);
+          saveStoredSubscription(getDefaultSubscriptionForNewUser(user.displayName || undefined, user.email || undefined));
+        }
+      } catch (error) {
+        console.warn('Failed to load user data from Firebase, falling back to localStorage:', error);
+        // Fallback: load from localStorage
+        setContacts(getStoredContacts());
+        setReminders(getStoredReminders());
+        setDrafts(getStoredDrafts());
+        setSubscription(getStoredSubscription());
+      }
+      setIsDataLoaded(true);
+    };
+
+    handleUserChange();
+  }, [user]);
+
+  // Sync data to Firebase whenever it changes (for authenticated, non-guest users)
+  useEffect(() => {
+    if (!user || user.isGuest || !isDataLoaded) return;
+
+    const syncData = async () => {
+      try {
+        await saveUserData(user.uid, {
+          contacts,
+          reminders,
+          drafts,
+          subscription,
+        });
+      } catch (error) {
+        console.warn('Failed to sync user data to Firebase:', error);
+      }
+    };
+
+    syncData();
+  }, [contacts, reminders, drafts, subscription, user, isDataLoaded]);
 
   const saveContact = (contact: Contact) => {
     const index = contacts.findIndex((c) => c.id === contact.id);
@@ -232,6 +330,10 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
   };
 
   const resetAllData = () => {
+    // For real (non-guest) users, also clear Firebase data
+    if (user && !user.isGuest) {
+      clearUserData(user.uid);
+    }
     resetToDemoData();
     setContacts(getStoredContacts());
     setReminders(getStoredReminders());

@@ -34,17 +34,19 @@ const NavLink = ({
   ...rest
 }: {
   to: string;
-  children: ReactNode;
-  className: (props: { isActive: boolean }) => string;
+  children: ReactNode | ((props: { isActive: boolean }) => ReactNode);
+  className: string | ((props: { isActive: boolean }) => string);
   end?: boolean;
 }) => {
   const pathname = usePathname();
   const isActive = end
     ? pathname === to
     : pathname === to || pathname.startsWith(to + '/');
+  const classNameStr = typeof className === 'function' ? className({ isActive }) : className;
+  const childrenNode = typeof children === 'function' ? children({ isActive }) : children;
   return (
-    <Link href={to} className={className({ isActive })} {...rest}>
-      {children}
+    <Link href={to} className={classNameStr} {...rest}>
+      {childrenNode}
     </Link>
   );
 };
