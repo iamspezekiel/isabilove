@@ -218,9 +218,9 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
   const loginAsGuest = () => {
     const guestUser: AppUser = {
-      uid: 'guest_dev_user',
-      email: 'guest@isabilove.demo',
-      displayName: 'Demo Companion',
+      uid: 'guest_demo_user',
+      email: 'sylvanuspezekiel@loveapp.online',
+      displayName: 'Sylvanus P. Ezekiel',
       photoURL: null,
       isGuest: true,
     };
