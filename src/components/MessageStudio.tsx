@@ -67,7 +67,7 @@ export const MessageStudio: React.FC<MessageStudioProps> = ({
 
   useEffect(() => {
     if (selectedContact && !initialDraft) {
-      setTone(selectedContact.preferredTone);
+      setTone(selectedContact!.preferredTone);
     }
   }, [selectedContactId]);
 
@@ -124,7 +124,7 @@ export const MessageStudio: React.FC<MessageStudioProps> = ({
 
     const newDraft: MessageDraft = {
       id: initialDraft?.id || `draft_${Date.now()}`,
-      contactId: selectedContact.id,
+      contactId: selectedContact!.id,
       occasion,
       customOccasionTitle: customOccasionTitle.trim() || undefined,
       tone,
@@ -133,7 +133,7 @@ export const MessageStudio: React.FC<MessageStudioProps> = ({
       suggestedGifts,
       deliveryTip,
       status: 'pending_approval',
-      scheduledDate: new Date().toISOString().split('T')[0],
+      scheduledDate: new Date().toISOString().split('T')[0]!,
       channel: 'queue',
     };
 
@@ -143,27 +143,27 @@ export const MessageStudio: React.FC<MessageStudioProps> = ({
 
   const handleSendWhatsApp = () => {
     if (!primaryText) return;
-    const phone = selectedContact?.phone ? selectedContact.phone.replace(/[^0-9]/g, '') : '';
+    const phone = selectedContact?.phone ? selectedContact!.phone.replace(/[^0-9]/g, '') : '';
     const url = phone ? `https://wa.me/${phone}?text=${encodeURIComponent(primaryText)}` : `https://wa.me/?text=${encodeURIComponent(primaryText)}`;
     window.open(url, '_blank');
 
     const draft: MessageDraft = {
       id: `draft_${Date.now()}`,
-      contactId: selectedContact.id,
+      contactId: selectedContact!.id,
       occasion,
       tone,
       generatedText: primaryText,
       customizedText: primaryText,
       suggestedGifts,
       status: 'sent',
-      scheduledDate: new Date().toISOString().split('T')[0],
+      scheduledDate: new Date().toISOString().split('T')[0]!,
       channel: 'whatsapp',
       sentAt: new Date().toISOString(),
       deliveryLog: {
         timestamp: new Date().toISOString(),
         method: 'WhatsApp Web',
         status: 'opened_in_client',
-        recipient: selectedContact.name,
+        recipient: selectedContact!.name,
       },
     };
     onApproveAndSendNow(draft, 'whatsapp');
@@ -234,15 +234,15 @@ export const MessageStudio: React.FC<MessageStudioProps> = ({
                 <div className="mt-2 p-2.5 rounded-xl bg-neutral-50 border border-neutral-100 text-xs space-y-1">
                   <div className="flex items-center gap-2">
                     <img
-                      src={selectedContact.avatarUrl || SAMPLE_AVATARS.partner}
-                      alt={selectedContact.name}
+                      src={selectedContact!.avatarUrl || SAMPLE_AVATARS.partner}
+                      alt={selectedContact!.name}
                       className="w-6 h-6 rounded-full object-cover shrink-0"
                       referrerPolicy="no-referrer"
                     />
-                    <span className="font-bold text-neutral-900 truncate">{selectedContact.name}</span>
+                    <span className="font-bold text-neutral-900 truncate">{selectedContact!.name}</span>
                     <span className="text-neutral-400">·</span>
                     <span className="text-rose-600 font-medium truncate">
-                      {getLoveLanguageLabel(selectedContact.loveLanguage)}
+                      {getLoveLanguageLabel(selectedContact!.loveLanguage)}
                     </span>
                   </div>
                 </div>
@@ -480,3 +480,5 @@ export const MessageStudio: React.FC<MessageStudioProps> = ({
     </div>
   );
 };
+
+

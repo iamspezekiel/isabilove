@@ -1,3 +1,5 @@
+﻿"use client";
+
 import React, { createContext, useContext, useEffect, useState, ReactNode } from 'react';
 import {
   auth,
@@ -48,10 +50,8 @@ const GUEST_STORAGE_KEY = 'isabilove_guest_user';
 export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<AppUser | null>(() => {
     try {
+      if (typeof window === 'undefined') return null;
       const savedGuest = localStorage.getItem(GUEST_STORAGE_KEY);
-      if (savedGuest) {
-        return JSON.parse(savedGuest);
-      }
     } catch {
       // ignore
     }
@@ -134,7 +134,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       setUser({
         uid: fbUser.uid,
         email: fbUser.email,
-        displayName: fbUser.displayName || email.split('@')[0],
+        displayName: fbUser.displayName || email.split('@')[0]!,
         photoURL: fbUser.photoURL,
       });
     } catch (err: unknown) {
@@ -168,7 +168,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       const appUser: AppUser = {
         uid: fbUser.uid,
         email: fbUser.email,
-        displayName: name || email.split('@')[0],
+        displayName: name || email.split('@')[0]!,
         photoURL: fbUser.photoURL,
         religion: religion || 'christianity',
         gender: gender || 'prefer_not_to_say',
@@ -266,3 +266,6 @@ export function useAuth() {
   }
   return context;
 }
+
+
+

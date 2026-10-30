@@ -1,3 +1,5 @@
+"use client";
+
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import {
   Contact,
@@ -75,7 +77,7 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
       saveStoredDrafts(updatedDrafts);
 
       if (notifiedEvents.length > 0) {
-        showToast(notifiedEvents[0], 'info');
+        showToast(notifiedEvents[0]!, 'info');
       }
     }
   }, [contacts, reminders]);
@@ -275,3 +277,5 @@ export function useApp() {
   }
   return context;
 }
+
+

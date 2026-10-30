@@ -69,7 +69,7 @@ self.addEventListener('fetch', (event) => {
 
 // Push event: show notification
 self.addEventListener('push', (event) => {
-  let data = { title: 'IsabiLove', body: 'You have a new reminder', icon: '/src/assets/images/avatar_partner_1792816163693.jpg' };
+  let data = { title: 'IsabiLove', body: 'You have a new reminder', icon: '/images/avatar_partner_1792816163693.jpg' };
 
   if (event.data) {
     try {
@@ -81,8 +81,8 @@ self.addEventListener('push', (event) => {
 
   const options = {
     body: data.body || 'You have a new reminder',
-    icon: data.icon || '/src/assets/images/avatar_partner_1792816163693.jpg',
-    badge: '/src/assets/images/avatar_friend_1792816163998.jpg',
+    icon: data.icon || '/images/avatar_partner_1792816163693.jpg',
+    badge: '/images/avatar_friend_1792816163998.jpg',
     tag: data.tag || 'isabilove-notification',
     data: data.data || {},
     actions: data.actions || [

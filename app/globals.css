@@ -1,0 +1,51 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    --parchment: #f3ece1;
+    --cream: #faf6ef;
+    --ink: #2a241c;
+    --muted: #6f665c;
+    --bronze: #8c6239;
+  }
+
+  body {
+    background-color: #f3ece1;
+    color: #2a241c;
+    font-family: 'Source Sans 3', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  h1, h2, h3, h4, h5, h6, .font-display, .font-serif-display {
+    font-family: 'Fraunces', Georgia, serif;
+    font-optical-sizing: auto;
+    letter-spacing: -0.015em;
+  }
+}
+
+/* Restrained, tactile touch & scrollbar styling */
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+::-webkit-scrollbar-track {
+  background: #f3ece1;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(140, 98, 57, 0.28);
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(140, 98, 57, 0.45);
+}
+
+/* No decorative motion: clean instant / settling feedback */
+@media (prefers-reduced-motion: reduce) {
+  *, ::before, ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

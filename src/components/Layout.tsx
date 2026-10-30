@@ -219,7 +219,7 @@ export const Layout: React.FC = () => {
                       />
                     ) : (
                       <div className="w-7 h-7 rounded-full bg-[#8c6239] text-[#faf6ef] text-[11px] font-bold flex items-center justify-center">
-                        {(user.displayName || user.email || 'U')[0].toUpperCase()}
+                        {(user.displayName || user.email || 'U')[0]!.toUpperCase()}
                       </div>
                     )
                   ) : (

@@ -9,23 +9,23 @@ const STORAGE_KEYS = {
 
 // Seed avatars generated specifically for IsabiLove
 export const SAMPLE_AVATARS = {
-  partner: '/src/assets/images/avatar_partner_1792816163693.jpg',
-  friend: '/src/assets/images/avatar_friend_1792816163998.jpg',
-  family: '/src/assets/images/avatar_family_1792816164677.jpg',
-  hero: '/src/assets/images/hero_relationship_1792816164710.jpg',
+  partner: '/images/avatar_partner_1792816163693.jpg',
+  friend: '/images/avatar_friend_1792816163998.jpg',
+  family: '/images/avatar_family_1792816164677.jpg',
+  hero: '/images/hero_relationship_1792816164710.jpg',
 };
 
 // Calculate relative dates so sample data is dynamically relevant
 function getFutureDate(daysAhead: number): string {
   const d = new Date();
   d.setDate(d.getDate() + daysAhead);
-  return d.toISOString().split('T')[0];
+  return d.toISOString().split('T')[0]!;
 }
 
 function getPastDate(daysAgo: number): string {
   const d = new Date();
   d.setDate(d.getDate() - daysAgo);
-  return d.toISOString().split('T')[0];
+  return d.toISOString().split('T')[0]!;
 }
 
 const DEFAULT_CONTACTS: Contact[] = [
@@ -242,6 +242,7 @@ const DEFAULT_SUBSCRIPTION: UserSubscription = {
 };
 
 export function getStoredContacts(): Contact[] {
+  if (typeof window === 'undefined') return [];
   try {
     const raw = localStorage.getItem(STORAGE_KEYS.CONTACTS);
     if (!raw) {
@@ -258,6 +259,7 @@ export function saveStoredContacts(contacts: Contact[]): void {
 }
 
 export function getStoredReminders(): Reminder[] {
+  if (typeof window === 'undefined') return [];
   try {
     const raw = localStorage.getItem(STORAGE_KEYS.REMINDERS);
     if (!raw) {
@@ -274,6 +276,7 @@ export function saveStoredReminders(reminders: Reminder[]): void {
 }
 
 export function getStoredDrafts(): MessageDraft[] {
+  if (typeof window === 'undefined') return [];
   try {
     const raw = localStorage.getItem(STORAGE_KEYS.DRAFTS);
     if (!raw) {
@@ -290,6 +293,15 @@ export function saveStoredDrafts(drafts: MessageDraft[]): void {
 }
 
 export function getStoredSubscription(): UserSubscription {
+  if (typeof window === 'undefined') {
+    const fresh: UserSubscription = {
+      ...DEFAULT_SUBSCRIPTION,
+      contactsLimit: 3,
+      aiDraftsLimit: 10,
+      aiDraftsUsed: 0,
+    };
+    return fresh;
+  }
   try {
     const raw = localStorage.getItem(STORAGE_KEYS.SUBSCRIPTION);
     if (!raw) {
@@ -364,3 +376,4 @@ export function resetToDemoData(): void {
   saveStoredDrafts(DEFAULT_DRAFTS);
   saveStoredSubscription(DEFAULT_SUBSCRIPTION);
 }
+
