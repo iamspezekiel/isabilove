@@ -52,6 +52,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     try {
       if (typeof window === 'undefined') return null;
       const savedGuest = localStorage.getItem(GUEST_STORAGE_KEY);
+      if (savedGuest) return JSON.parse(savedGuest) as AppUser;
     } catch {
       // ignore
     }

@@ -1,5 +1,8 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { NavLink, Link, Outlet, useNavigate, useLocation } from 'react-router-dom';
+"use client";
+
+import React, { useState, useRef, useEffect, ReactNode } from 'react';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { useApp } from '../context/AppContext';
 import { useAuth } from '../context/AuthContext';
 import {
@@ -22,17 +25,40 @@ import {
   BookOpen,
 } from 'lucide-react';
 
-export const Layout: React.FC = () => {
+// Local NavLink component that mirrors react-router-dom's NavLink using Next.js
+const NavLink = ({
+  to,
+  children,
+  className,
+  end = false,
+  ...rest
+}: {
+  to: string;
+  children: ReactNode;
+  className: (props: { isActive: boolean }) => string;
+  end?: boolean;
+}) => {
+  const pathname = usePathname();
+  const isActive = end
+    ? pathname === to
+    : pathname === to || pathname.startsWith(to + '/');
+  return (
+    <Link href={to} className={className({ isActive })} {...rest}>
+      {children}
+    </Link>
+  );
+};
+
+export const Layout: React.FC<{ children: ReactNode }> = ({ children }) => {
   const { drafts, subscription, toast, hideToast } = useApp();
   const { user, isAuthenticated, logout, loginAsGuest } = useAuth();
-  const navigate = useNavigate();
-  const location = useLocation();
 
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const profileRef = useRef<HTMLDivElement>(null);
 
-  const authRoutes = ['/login', '/signup', '/forgot-password', '/reset-password', '/demo'];
-  const isAuthPage = authRoutes.some((path) => location.pathname === path || location.pathname.startsWith(`${path}/`));
+  const authRoutes = ['/auth/login', '/auth/signup', '/auth/forgot-password', '/auth/reset-password', '/demo'];
+  const pathname = usePathname();
+  const isAuthPage = authRoutes.some((path) => pathname === path || pathname.startsWith(`${path}/`));
 
   const pendingApprovalsCount = isAuthenticated
     ? drafts.filter((d) => d.status === 'pending_approval').length
@@ -62,7 +88,7 @@ export const Layout: React.FC = () => {
             {/* Left Zone: Brand Mark & Title */}
             <div className="flex items-center gap-2.5 shrink-0">
               <Link
-                to="/"
+                href="/"
                 className="flex items-center gap-2.5 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#8c6239] rounded-lg min-h-[44px] min-w-[44px] py-1"
                 aria-label="IsabiLove Home"
               >
@@ -240,7 +266,7 @@ export const Layout: React.FC = () => {
                     {isAuthenticated && user ? (
                       <>
                         <Link
-                          to="/settings"
+                          href="/settings"
                           onClick={() => setIsProfileOpen(false)}
                           className="block p-3 bg-[#f3ece1]/70 hover:bg-[#f3ece1] rounded-xl border border-[#8c6239]/15 transition-colors"
                         >
@@ -254,7 +280,7 @@ export const Layout: React.FC = () => {
 
                         <div className="space-y-1 text-xs">
                           <Link
-                            to="/settings"
+                            href="/settings"
                             onClick={() => setIsProfileOpen(false)}
                             className="flex items-center gap-2.5 px-3 py-2 rounded-xl text-[#2a241c] hover:bg-[#f3ece1] transition-colors min-h-[44px]"
                           >
@@ -290,7 +316,7 @@ export const Layout: React.FC = () => {
 
                         <div className="pt-1">
                           <Link
-                            to="/login"
+                            href="/auth/login"
                             onClick={() => setIsProfileOpen(false)}
                             className="w-full py-2.5 px-3 bg-[#2a241c] hover:bg-[#2a241c]/90 text-[#faf6ef] rounded-xl text-xs font-semibold transition-colors flex items-center justify-center gap-1.5 shadow-xs cursor-pointer min-h-[44px]"
                           >
@@ -315,7 +341,7 @@ export const Layout: React.FC = () => {
           isAuthPage ? 'pt-6 sm:pt-12 flex flex-col justify-center' : 'pt-4 sm:pt-6'
         } ${isAuthenticated ? 'pb-16 md:pb-8' : 'pb-8'}`}
       >
-        <Outlet />
+        {children}
       </main>
 
       {/* ================= Mobile-First Thumb-Zone Bottom App Navigation Bar ================= */}
