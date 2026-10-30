@@ -23,6 +23,7 @@ import {
   Crown,
   User as UserIcon,
   BookOpen,
+  Delete,
 } from 'lucide-react';
 
 // Local NavLink component that mirrors react-router-dom's NavLink using Next.js
@@ -302,6 +303,15 @@ export const Layout: React.FC<{ children: ReactNode }> = ({ children }) => {
                           >
                             <LogOut className="w-4 h-4" />
                             <span>Sign Out</span>
+                          </button>
+
+                          {/* Delete Account Option */}
+                          <button
+                            className="w-full flex items-center justify-center py-1.5 px-0.5 rounded-xl min-h-[44px] transition-colors text-sm text-[#6f665c] hover:text-[#2a241c] border border-[#8c6239]/30"
+                            onClick={() => window.confirm('Are you sure you want to delete your account? This action cannot be undone.')}
+                          >
+                            <Delete className="w-4 h-4 mx-2" />
+                            <span className="text-[10px] tracking-tight mt-0.5">Delete Account</span>
                           </button>
                         </div>
                       </>
