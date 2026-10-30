@@ -471,7 +471,7 @@ export const SettingsPage: React.FC = () => {
                 className="w-full px-3 py-2.5 min-h-[44px] rounded-xl border border-[#8c6239]/30 focus:outline-none focus:border-[#8c6239] bg-[#faf6ef] text-[#2a241c]"
               />
               <p className="mt-1 text-[11px] text-[#6f665c]">
-                No push notifications after this cutoff time.
+                No reminders after this cutoff time.
               </p>
             </div>
           </div>
