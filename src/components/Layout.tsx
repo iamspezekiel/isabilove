@@ -85,8 +85,8 @@ export const Layout: React.FC<{ children: ReactNode }> = ({ children }) => {
     <div className="min-h-screen bg-[#f3ece1] text-[#2a241c] flex flex-col font-sans selection:bg-[#8c6239]/20 selection:text-[#2a241c] overflow-x-hidden w-full">
       {/* ================= Ultra-Clean Floating Top Bar: Hidden on Auth Pages ================= */}
       {!isAuthPage && (
-        <div className="sticky top-2 sm:top-3 z-30 px-3 sm:px-6 lg:px-8 w-full max-w-7xl mx-auto pointer-events-none">
-          <header className="pointer-events-auto bg-[#faf6ef]/95 backdrop-blur-md border border-[#8c6239]/20 shadow-[0_4px_24px_rgba(42,36,28,0.06)] rounded-2xl sm:rounded-3xl px-3.5 sm:px-5">
+        <div className="fixed top-0 z-30 px-3 sm:px-6 lg:px-8 w-full max-w-7xl mx-auto pointer-events-none">
+          <header className="pointer-events-auto bg-[#faf6ef]/95 backdrop-blur-md border border-[#8c6239]/20 shadow-[0_4px_24px_rgba(42,36,28,0.06)] rounded-2xl sm:rounded-3xl px-4 sm:px-6 py-2 sm:py-3">
             <div className="flex items-center justify-between h-14 sm:h-16">
             {/* Left Zone: Brand Mark & Title */}
             <div className="flex items-center gap-2.5 shrink-0">
