@@ -1,5 +1,5 @@
 import React from 'react';
-import Link from 'next/link';
+import { Link as RouterLink } from 'react-router-dom';
 import { Heart, ArrowRight, AlertCircle } from 'lucide-react';
 
 export default function NotFoundPage() {
@@ -29,13 +29,13 @@ export default function NotFoundPage() {
           </div>
 
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
-            <Link
-              href="/"
+            <RouterLink
+              to="/dashboard"
               className="w-full sm:w-auto min-h-[48px] px-4 py-2.5 bg-[#2a241c] hover:bg-[#2a241c]/90 text-[#faf6ef] rounded-xl text-xs font-semibold transition-colors flex items-center justify-center gap-1.5 cursor-pointer"
             >
               <ArrowRight className="w-3.5 h-3.5 text-[#8c6239]" />
               Back to Haven
-            </Link>
+            </RouterLink>
           </div>
         </div>
       </div>

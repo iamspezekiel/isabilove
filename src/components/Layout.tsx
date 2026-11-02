@@ -1,8 +1,7 @@
 "use client";
 
 import React, { useState, useRef, useEffect, ReactNode } from 'react';
-import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { Link as RouterLink, useLocation } from 'react-router-dom';
 import { useApp } from '../context/AppContext';
 import { useAuth } from '../context/AuthContext';
 import {
@@ -39,16 +38,16 @@ const NavLink = ({
   className: string | ((props: { isActive: boolean }) => string);
   end?: boolean;
 }) => {
-  const pathname = usePathname();
+  const { pathname } = useLocation();
   const isActive = end
     ? pathname === to
     : pathname === to || pathname.startsWith(to + '/');
   const classNameStr = typeof className === 'function' ? className({ isActive }) : className;
   const childrenNode = typeof children === 'function' ? children({ isActive }) : children;
   return (
-    <Link href={to} className={classNameStr} {...rest}>
+    <RouterLink to={to} className={classNameStr} {...rest}>
       {childrenNode}
-    </Link>
+    </RouterLink>
   );
 };
 
@@ -60,7 +59,7 @@ export const Layout: React.FC<{ children: ReactNode }> = ({ children }) => {
   const profileRef = useRef<HTMLDivElement>(null);
 
   const authRoutes = ['/auth/login', '/auth/signup', '/auth/forgot-password', '/auth/reset-password', '/demo'];
-  const pathname = usePathname();
+  const { pathname } = useLocation();
   const isAuthPage = authRoutes.some((path) => pathname === path || pathname.startsWith(`${path}/`));
 
   const pendingApprovalsCount = isAuthenticated
@@ -90,8 +89,8 @@ export const Layout: React.FC<{ children: ReactNode }> = ({ children }) => {
             <div className="flex items-center justify-between h-14 sm:h-16">
             {/* Left Zone: Brand Mark & Title */}
             <div className="flex items-center gap-2.5 shrink-0">
-              <Link
-                href="/dashboard"
+              <RouterLink
+                to="/dashboard"
                 className="flex items-center gap-2.5 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#8c6239] rounded-lg min-h-[44px] min-w-[44px] py-1"
                 aria-label="IsabiLove Home"
               >
@@ -105,7 +104,7 @@ export const Layout: React.FC<{ children: ReactNode }> = ({ children }) => {
                     IsabiLove
                   </span>
                 </div>
-              </Link>
+              </RouterLink>
             </div>
 
             {/* Center Zone: Desktop Primary Navigation */}
@@ -268,8 +267,8 @@ export const Layout: React.FC<{ children: ReactNode }> = ({ children }) => {
                   <div className="absolute right-0 mt-2 w-64 bg-[#faf6ef] border border-[#8c6239]/25 rounded-2xl shadow-xl p-3 z-50 space-y-2">
                     {isAuthenticated && user ? (
                       <>
-                        <Link
-                          href="/settings"
+                        <RouterLink
+                          to="/settings"
                           onClick={() => setIsProfileOpen(false)}
                           className="block p-3 bg-[#f3ece1]/70 hover:bg-[#f3ece1] rounded-xl border border-[#8c6239]/15 transition-colors"
                         >
@@ -279,17 +278,17 @@ export const Layout: React.FC<{ children: ReactNode }> = ({ children }) => {
                           <p className="text-[11px] text-[#6f665c] truncate">
                             {user.email || 'companion@isabilove.demo'}
                           </p>
-                        </Link>
+                        </RouterLink>
 
                         <div className="space-y-1 text-xs">
-                          <Link
-                            href="/settings"
+                          <RouterLink
+                            to="/settings"
                             onClick={() => setIsProfileOpen(false)}
                             className="flex items-center gap-2.5 px-3 py-2 rounded-xl text-[#2a241c] hover:bg-[#f3ece1] transition-colors min-h-[44px]"
                           >
                             <Settings className="w-4 h-4 text-[#8c6239]" />
                             <span className="font-medium">Settings & Account</span>
-                          </Link>
+                          </RouterLink>
                         </div>
 
                         <div className="pt-2 border-t border-[#8c6239]/15">
@@ -327,14 +326,14 @@ export const Layout: React.FC<{ children: ReactNode }> = ({ children }) => {
                         </p>
 
                         <div className="pt-1">
-                          <Link
-                            href="/auth/login"
+                          <RouterLink
+                            to="/auth/login"
                             onClick={() => setIsProfileOpen(false)}
                             className="w-full py-2.5 px-3 bg-[#2a241c] hover:bg-[#2a241c]/90 text-[#faf6ef] rounded-xl text-xs font-semibold transition-colors flex items-center justify-center gap-1.5 shadow-xs cursor-pointer min-h-[44px]"
                           >
                             <LogIn className="w-3.5 h-3.5" />
                             <span>Sign In / Sign Up</span>
-                          </Link>
+                          </RouterLink>
                         </div>
                       </>
                     )}

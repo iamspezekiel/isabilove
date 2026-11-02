@@ -1,11 +1,11 @@
 "use client";
 
 import { useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/context/AuthContext';
 
 export default function DemoPage() {
-  const router = useRouter();
+  const navigate = useNavigate();
   const { loginAsGuest, isAuthenticated, isLoading } = useAuth();
 
   useEffect(() => {
@@ -17,7 +17,7 @@ export default function DemoPage() {
   // After guest login, redirect to dashboard
   useEffect(() => {
     if (isAuthenticated) {
-      router.replace('/dashboard');
+      navigate('/dashboard', { replace: true });
     }
   }, [isAuthenticated, router]);
 
