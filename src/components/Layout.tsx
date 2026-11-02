@@ -91,7 +91,7 @@ export const Layout: React.FC<{ children: ReactNode }> = ({ children }) => {
             {/* Left Zone: Brand Mark & Title */}
             <div className="flex items-center gap-2.5 shrink-0">
               <Link
-                href="/"
+                href="/dashboard"
                 className="flex items-center gap-2.5 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#8c6239] rounded-lg min-h-[44px] min-w-[44px] py-1"
                 aria-label="IsabiLove Home"
               >
@@ -112,7 +112,7 @@ export const Layout: React.FC<{ children: ReactNode }> = ({ children }) => {
             {isAuthenticated && (
               <nav className="hidden md:flex items-center gap-1 bg-[#f3ece1]/80 p-1 rounded-2xl border border-[#8c6239]/15" aria-label="Desktop Primary Navigation">
                 <NavLink
-                  to="/"
+                  to="/dashboard"
                   end
                   className={({ isActive }) =>
                     `px-3 py-1.5 text-xs font-medium rounded-xl transition-colors flex items-center gap-1.5 min-h-[38px] ${
